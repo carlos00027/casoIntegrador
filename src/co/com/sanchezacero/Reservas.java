@@ -10,10 +10,10 @@ public class Reservas {
     
     Connection conn;
     
-    String mariaDatabase = "restaurante";
-    String mariaUrl = "jdbc:mariadb://localhost:3306/"+mariaDatabase;
-    String mariaUser = "root";
-    String mariaPassword = "password";
+    String mariaDatabase = "";
+    String mariaUrl = "jdbc:mariadb://35.188.25.86:3306/"+mariaDatabase;
+    String mariaUser = "";
+    String mariaPassword = "";
 
     static Scanner s;
     public Connection conectar(){
