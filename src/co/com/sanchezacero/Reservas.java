@@ -130,7 +130,16 @@ public class Reservas {
                 dtoReserva.setTipoDecoracion(s.nextLine());
 
                 modificarReserva(dtoReserva,id);
+            } else if(opcion == 4){
+                System.out.println("Seleccionaste la opcion listar reservas");
+                System.out.println("Seleccione ahora el filtro aplicar");
+                System.out.println("1. listar por Fecha");
+                System.out.println("2. listar por numero de reserva");
+                System.out.println("3. listar por numero de identificacion");
+                int filtro = s.nextInt();
+                listarReserva(filtro);
             }
+
             opcion = menuOpciones();
         }
 
@@ -228,12 +237,99 @@ public class Reservas {
             stmt.execute();
 
             System.out.println("Actualizado con exito");
+            mariaCx.conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
-    public static void listarReserva() {
-        
+    public static void listarReserva(int filtro) {
+        Reservas mariaCx = new Reservas();
+        mariaCx.conectar();
+
+        if(filtro == 1){
+            s.nextLine();
+            System.out.println("Digite fecha en formato dd/mm/yyyy");
+            SimpleDateFormat fechaScanner = new SimpleDateFormat("dd/MM/yyyy");
+            try {
+                Date fechaFormat = fechaScanner.parse(s.nextLine());
+                String querySearch = "SELECT * FROM reservas WHERE fechaReserva = ? AND estado = 'activo'";
+                PreparedStatement stmt;
+                try {
+                    stmt = mariaCx.conn.prepareStatement(querySearch);
+                    stmt.setDate(1, new java.sql.Date(fechaFormat.getTime()));
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        System.out.println("------");
+                        System.out.println("numero de reserva: "+rs.getInt("id"));
+                        System.out.println("Identificacion: "+rs.getInt("identificacion"));
+                        System.out.println("Nombre del cliente: "+rs.getString("nombreCliente"));
+                        System.out.println("Numero de telefono: "+rs.getString("noContacto"));
+                        System.out.println("Correo electronico: "+rs.getString("correo"));
+                        System.out.println("Fecha de reserva: "+rs.getDate("fechaReserva"));
+                        System.out.println("Estado: "+rs.getString("estado"));
+                        System.out.println("Cantidad de personas: "+rs.getInt("cantidadPersonas"));
+                        System.out.println("Motivo: "+rs.getString("motivo"));
+                        System.out.println("Tipo decoracion: "+rs.getString("tipoDecoracion"));
+                    }
+                    mariaCx.conn.close();
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                }
+            } catch (ParseException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if(filtro == 2){
+            System.out.println("Ingresar el numero de reserva");
+            int id = s.nextInt();
+            String querySearch = "SELECT * from reservas WHERE id=? AND estado = 'activo' LIMIT 1";
+            try {
+                PreparedStatement stmt = mariaCx.conn.prepareStatement(querySearch);
+                stmt.setInt(1, id);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    System.out.println("------");
+                    System.out.println("numero de reserva: "+rs.getInt("id"));
+                    System.out.println("Identificacion: "+rs.getInt("identificacion"));
+                    System.out.println("Nombre del cliente: "+rs.getString("nombreCliente"));
+                    System.out.println("Numero de telefono: "+rs.getString("noContacto"));
+                    System.out.println("Correo electronico: "+rs.getString("correo"));
+                    System.out.println("Fecha de reserva: "+rs.getDate("fechaReserva"));
+                    System.out.println("Estado: "+rs.getString("estado"));
+                    System.out.println("Cantidad de personas: "+rs.getInt("cantidadPersonas"));
+                    System.out.println("Motivo: "+rs.getString("motivo"));
+                    System.out.println("Tipo decoracion: "+rs.getString("tipoDecoracion"));
+                }
+                mariaCx.conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+        } else if (filtro == 3){
+            System.out.println("Ingresar el numero de identificacion");
+            int identificacion = s.nextInt();
+            String querySearch = "SELECT * from reservas WHERE identificacion = ? AND estado = 'activo'";
+            try {
+                PreparedStatement stmt = mariaCx.conn.prepareStatement(querySearch);
+                stmt.setInt(1, identificacion);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    System.out.println("------");
+                    System.out.println("numero de reserva: "+rs.getInt("id"));
+                    System.out.println("Identificacion: "+rs.getInt("identificacion"));
+                    System.out.println("Nombre del cliente: "+rs.getString("nombreCliente"));
+                    System.out.println("Numero de telefono: "+rs.getString("noContacto"));
+                    System.out.println("Correo electronico: "+rs.getString("correo"));
+                    System.out.println("Fecha de reserva: "+rs.getDate("fechaReserva"));
+                    System.out.println("Estado: "+rs.getString("estado"));
+                    System.out.println("Cantidad de personas: "+rs.getInt("cantidadPersonas"));
+                    System.out.println("Motivo: "+rs.getString("motivo"));
+                    System.out.println("Tipo decoracion: "+rs.getString("tipoDecoracion"));
+                }
+                mariaCx.conn.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
     
     
